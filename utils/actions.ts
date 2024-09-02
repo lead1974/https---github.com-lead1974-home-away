@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { imageSchema, profileSchema, propertySchema, validateWithZodSchema } from "./schemas";
 import { uploadImage } from "./supabse";
 
+
 // Global 
 const renderError = (error: unknown): { message: string } => {
   console.log(error);
@@ -146,10 +147,50 @@ export const createPropertyAction = async (
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
+    const file = formData.get("image") as File;
+
     const validatedFields = validateWithZodSchema(propertySchema, rawData);
+    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
+    const fullPath = await uploadImage(validatedFile.image, user.id);
+
+    await db.property.create({
+      data: {
+        ...validatedFields,
+        image: fullPath,
+        profileId: user.id,
+      },
+    });
   } catch (error) {
     return renderError(error);
   }
   redirect("/");
+};
+
+export const fetchProperties = async ({
+  search = "",
+  category,
+}: {
+  search?: string;
+  category?: string;
+}) => {
+  const properties = await db.property.findMany({
+    where: {
+      category,
+      OR: [
+        { name: { contains: search, mode: "insensitive" } },
+        { tagline: { contains: search, mode: "insensitive" } },
+      ],
+    },
+    select: {
+      id: true,
+      name: true,
+      tagline: true,
+      country: true,
+      image: true,
+      price: true,
+    },
+    orderBy: {createdAt: 'desc',},
+  });
+  return properties;
 };
 // END Property DB actions
