@@ -193,6 +193,18 @@ export const fetchProperties = async ({
   });
   return properties;
 };
+
+export const fetchPropertyDetails = (id: string) => {
+  return db.property.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      profile: true,
+    },
+  });
+};
+
 // END Property DB actions
 
 // BEGIN Favorite DB actions
@@ -268,4 +280,5 @@ export const fetchFavorites = async () => {
   });
   return favorites.map((favorite) => favorite.property);
 };
+
 // END Favorite DB actions
