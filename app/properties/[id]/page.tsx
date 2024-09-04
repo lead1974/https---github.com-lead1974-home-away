@@ -8,11 +8,14 @@ import ImageContainer from "@/components/properties/ImageContainer";
 import PropertyDetails from "@/components/properties/PropertyDetails";
 import ShareSocialButton from "@/components/properties/ShareSocialButton";
 import UserInfo from "@/components/properties/UserInfo";
+import PropertyReviews from "@/components/reviews/PropertyReviews";
+import SubmitReview from "@/components/reviews/SubmitReview";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchPropertyDetails } from "@/utils/actions";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
+
 
 const DynamicMap = dynamic(
   () => import("@/components/properties/PropertyMap"),
@@ -57,8 +60,10 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
             </div>
             <div className="lg:col-span-4 flex flex-col items-center">
                 <BookingCalendar />
-            </div>
+            </div>            
         </section>
+        <SubmitReview propertyId={property.id} />
+        <PropertyReviews propertyId={property.id} />
     </section>
   );
 }
