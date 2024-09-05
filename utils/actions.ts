@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { createReviewSchema, imageSchema, profileSchema, propertySchema, validateWithZodSchema } from "./schemas";
 import { uploadImage } from "./supabse";
 import { actionAsyncStorage } from "next/dist/client/components/action-async-storage-instance";
+import { calculateTotals } from "./calculateTotals";
 
 
 // Global 
@@ -408,5 +409,41 @@ export const findExistingReview = async (
 // END Reviews DB actions
 
 // Begin Booking DB actions
+export const createBookingAction = async (prevState: {
+  propertyId: string;
+  checkIn: Date;
+  checkOut: Date;
+}) => {
+  const user = await getAuthUser();
 
+  const { propertyId, checkIn, checkOut } = prevState;
+  const property = await db.property.findUnique({
+    where: { id: propertyId },
+    select: { price: true },
+  });
+  if (!property) {
+    return { message: "Property not found" };
+  }
+  const { orderTotal, totalNights } = calculateTotals({
+    checkIn,
+    checkOut,
+    price: property.price,
+  });
+
+  try {
+    const booking = await db.booking.create({
+      data: {
+        checkIn,
+        checkOut,
+        orderTotal,
+        totalNights,
+        profileId: user.id,
+        propertyId,
+      },
+    });
+  } catch (error) {
+    return renderError(error);
+  }
+  redirect("/bookings");
+};
 // END Booking DB actions
