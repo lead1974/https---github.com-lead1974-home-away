@@ -10,7 +10,7 @@ type NavLink = {
     { href: "/reviews ", label: "reviews" },
     { href: "/reservations ", label: "reservations" },
     { href: "/rentals/create ", label: "create rental" },
-    { href: "/rentals", label: "my rentals" },
-    { href: "/admin ", label: "admin" },
+    { href: "/rentals", label: "my rentals" },    
     { href: "/profile ", label: "profile" },
+    { href: "/admin ", label: "admin" },
   ];

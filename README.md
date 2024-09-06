@@ -5679,7 +5679,9 @@ export default ReservationsPage;
 
 - refactor middleware
 - create ENV variable with userId
-- add to VERCEL
+- add to VERCEL to environment-variables
+- https://vercel.com/baldas-projects/nextjs-home-away/settings/environment-variables
+- new env variable: ADMIN_USER_ID=user_2l77KdiKdUCrMbINJbIFP02SgZJ
 
 ```ts
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
