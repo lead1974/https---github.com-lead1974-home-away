@@ -8,6 +8,7 @@ import { createReviewSchema, imageSchema, profileSchema, propertySchema, validat
 import { uploadImage } from "./supabse";
 import { actionAsyncStorage } from "next/dist/client/components/action-async-storage-instance";
 import { calculateTotals } from "./calculateTotals";
+import { profile } from "console";
 
 
 // Global 
@@ -621,3 +622,44 @@ export const updatePropertyImageAction = async (
   }
 };
 //END Rental DB actions
+
+//Begin Reservation DB actions
+
+export const fetchReservations = async () => {
+  const user = await getAuthUser();
+
+  const reservations = await db.booking.findMany({
+    where: {
+      property: {
+        profileId: user.id,
+      },
+    },
+
+    orderBy: {
+      createdAt: "desc", // or 'asc' for ascending order
+    },
+
+    include: {
+      property: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          country: true,
+        },
+      }, // include property details in the result
+      profile: {
+        select: {
+          id: true,
+          userName: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      }, // include property details in the result
+    },
+  });
+  return reservations;
+};
+
+//END Reservation DB actions
