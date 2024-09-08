@@ -5972,6 +5972,14 @@ export default Chart;
 
 [Embedded Form](https://docs.stripe.com/checkout/embedded/quickstart)
 
+# https://dashboard.stripe.com/apikeys
+
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+
+# Set this environment variable to support webhooks — https://stripe.com/docs/webhooks#verify-events
+# STRIPE_WEBHOOK_SECRET=whsec_12345
+
 - setup and add keys to .env
 - install
 
